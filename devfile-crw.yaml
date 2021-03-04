@@ -1,0 +1,35 @@
+apiVersion: 1.0.0
+metadata:
+  name: cert-manager-he-webhook
+projects:
+  - name: cert-manager-acme-he-webhook
+    source:
+      location: 'git@github.com:gattytto/cert-manager-acme-he-webhook.git'
+      type: git
+      branch: master
+  - name: gocode
+    source:
+      location: 'https://github.com/stamblerre/gocode'
+      type: git
+      branch: master
+    clonePath: .che/gopath/src/github.com/stamblerre/gocode
+components:
+  - cpuLimit: 4000m
+    memoryLimit: 1500Mi
+    cpuRequest: 300m
+    type: chePlugin
+    reference: 'https://raw.githubusercontent.com/gattytto/cheplugins/master/bazel/0.3.0/meta.yaml'
+    alias: bazel
+  - cpuLimit: 1200m
+    id: eclipse/che-theia/next
+    memoryLimit: 2048Mi
+    cpuRequest: 300m
+    type: cheEditor
+    memoryRequest: 512Mi
+  - type: chePlugin
+    reference: 'https://raw.githubusercontent.com/gattytto/cheplugins/master/gogrpc/crio/meta.yaml'
+  - cpuLimit: 1000m
+    cpuRequest: 300m
+    type: chePlugin
+    reference: 'https://raw.githubusercontent.com/gattytto/cheplugins/master/tekton/0.0.3/meta.yaml'
+    alias: tekton
