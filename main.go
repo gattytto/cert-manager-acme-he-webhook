@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 	"strings"
 
 	"log"
@@ -110,17 +111,6 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 		return err
 	}
 	
-	/*
-		Authentication being passed in the URL
-		% curl -4 "http://_acme-challenge.example.com:password@dyn.dns.he.net/nic/update?hostname=dyn.example.com&txt=evaGxfADs6pSRb..."
-
-		Authentication and Updating using GET
-		% curl "https://dyn.dns.he.net/nic/update?hostname=_acme-challenge.example.com&password=password&txt=evaGxfADs6pSRb..."
-
-		Authentication and Updating using a POST
-		% curl "https://dyn.dns.he.net/nic/update" -d "hostname=_acme-challenge.example.com" -d "password=password" -d "txt=evaGxfADs6pSRb..."
-
-	*/
 	// TODO: do something more useful with the decoded configuration
 	fmt.Printf("Decoded configuration %v", cfg)
 	values := url.Values{}
@@ -136,17 +126,35 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	resp, err := client.Do(req)
 
 	
+	fail:=false
+	//retry:=false
+	body:=[]byte("")
 	if err != nil {
 		log.Println("Request error...")
 		log.Println("Err:", err.Error())
 	} else {
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ = ioutil.ReadAll(resp.Body)
 		if resp.StatusCode == http.StatusOK {
-			log.Println("Update TXT success:", string(body))
+			if string(body) == "good "{
+				log.Println("Update TXT success:", string(body))
+				time.Sleep(10)
+				log.Println("wait some seconds...")
+			}else if string(body) == "interval "{
+				log.Println("Update TXT failed, too fast:", string(body))	
+				fail=true
+				time.Sleep(5)
+				//retry=true
+			}else{
+				log.Println("Update TXT failed:", string(body))	
+				fail=true
+			}
 		} else {
+			fail=true
 			log.Println("Update TXT failed:", string(body))
 		}
 	}
+	if fail { return fmt.Errorf("error: %v", string(body)) }
+
 	// TODO: add code that sets a record in the DNS provider's console
 	return nil
 }
@@ -165,29 +173,44 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	// TODO: add code that deletes a record from the DNS provider's console
 
 	values := url.Values{}
-	hash := "-"
+	hash := "--"
 	values.Add("hostname", "cert-manager-dns01-tests." + cfg.HostName)
 	values.Add("password", cfg.APIKeySecretRef.Key)
 	values.Add("txt", hash)
 		
 	client := GetHttpClient()
-
+	fail:=false
+	//retry:=false
+	body:=[]byte("")
 	req, _ := http.NewRequest("POST", HEUrl, strings.NewReader(values.Encode()))
 	resp, err := client.Do(req)
-
 	
 	if err != nil {
 		log.Println("Request error...")
 		log.Println("Err:", err.Error())
 	} else {
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ = ioutil.ReadAll(resp.Body)
 		if resp.StatusCode == http.StatusOK {
-			log.Println("Update TXT success:", string(body))
+			if string(body) == "good "{
+				log.Println("Update TXT success:", string(body))
+			}else if string(body) == "interval "{
+				log.Println("Update TXT failed, too fast:", string(body))	
+				fail=true
+				time.Sleep(5)
+				//retry=true
+			}else if string(body) == "nochange " {
+				log.Println("changed to known value...")
+			}else{
+				log.Println("Update TXT failed:", string(body))	
+				fail=true
+			}
 		} else {
+			fail=true
 			log.Println("Update TXT failed:", string(body))
 		}
+		if fail {return fmt.Errorf("error: %v", string(body)) }
 	}
-
+		
 	return nil
 }
 
