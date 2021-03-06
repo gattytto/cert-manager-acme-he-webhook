@@ -1,7 +1,7 @@
 {
-    "resolvedZone": "lasmalvinassonargentinas.com.",
+    "resolvedZone": "",
     "binariesPath": "/bin",
     "email": "a@a.com",
-    "hostname": "lasmalvinassonargentinas.com",
-    "apiKeySecretRef": { "key": "oEbeI4yi5xId4gWI" }
+    "hostname": "",
+    "apiKeySecretRef": { "key": "" }
 }

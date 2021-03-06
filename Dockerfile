@@ -1,4 +1,4 @@
-FROM golang:1.12.4-alpine AS build_deps
+FROM gcr.io/gcp-runtimes/go1-builder:1.12 AS build_deps
 
 RUN apk add --no-cache git
 
