@@ -3,5 +3,6 @@
     "binariesPath": "/bin",
     "email": "a@a.com",
     "hostname": "",
-    "apiKeySecretRef": { "key": "" }
+    "apiKeySecretRef": { "key": "" },
+    "Key": "36b934a6fb6eea79f5729cc5de2c8147"
 }
