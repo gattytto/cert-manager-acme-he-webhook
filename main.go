@@ -82,6 +82,7 @@ type customDNSProviderConfig struct {
 	Email           string `json:"email"`
 	APIKeySecretRef cmmeta.SecretKeySelector `json:"apiKeySecretRef"`
 	HostName		string `json: "hostname"`
+	TXTKey			string	`json: "Key"`
 }
 
 // Name is used as the name for this DNS solver when referencing it on the ACME
@@ -114,7 +115,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	// TODO: do something more useful with the decoded configuration
 	fmt.Printf("Decoded configuration %v", cfg)
 	values := url.Values{}
-	hash := "123d=="
+	hash := cfg.TXTKey
 	values.Add("hostname", "cert-manager-dns01-tests." + cfg.HostName)
 	values.Add("password", cfg.APIKeySecretRef.Key)
 	values.Add("txt", hash)

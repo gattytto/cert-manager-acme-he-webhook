@@ -127,7 +127,7 @@ metadata:
     release: acme-he-webhook
     heritage: Helm
 spec:
-  replicas: 
+  replicas: 1 
   selector:
     matchLabels:
       app: acme-he-webhook
@@ -141,7 +141,7 @@ spec:
       serviceAccountName: acme-he-webhook
       containers:
         - name: acme-he-webhook
-          image: "acme-he-webhook:latest"
+          image: "quay.io/gattytto/acme-he-webhook:latest"
           imagePullPolicy: IfNotPresent
           args:
             - --tls-cert-file=/tls/tls.crt
