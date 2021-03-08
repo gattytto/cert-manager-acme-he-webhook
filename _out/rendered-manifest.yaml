@@ -159,7 +159,7 @@ spec:
             - --tls-private-key-file=/tls/tls.key
           env:
             - name: GROUP_NAME
-              value: "dyn.dns.he.net"
+              value: dyn.dns.he.net/v1alpha1
           ports:
             - name: https
               containerPort: 443
@@ -189,14 +189,14 @@ spec:
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
-  name: v1.dyn.dns.he.net
+  name: v1alpha1.dyn.dns.he.net
   labels:
     app: acme-he-webhook
     chart: acme-he-webhook-0.1.0
     release: acme-he-webhook
     heritage: Helm
   annotations:
-    cert-manager.io/inject-ca-from: "gattytto-code/acme-he-webhook-webhook-tls"
+    cert-manager.io/inject-ca-from: "acme-he-webhook-webhook-tls"
 spec:
   group: dyn.dns.he.net
   groupPriorityMinimum: 1000
@@ -204,11 +204,11 @@ spec:
   service:
     name: acme-he-webhook
     namespace: cert-manager
-  version: v1
+  version: v1alpha1
 ---
 # Source: acme-he-webhook/templates/pki.yaml
 # Generate a CA Certificate used to sign certificates for the webhook
-apiVersion: cert-manager.io/v1
+apiVersion: cert-manager.io/v1alpha3
 kind: Certificate
 metadata:
   name: acme-he-webhook-ca
@@ -228,7 +228,7 @@ spec:
 ---
 # Source: acme-he-webhook/templates/pki.yaml
 # Finally, generate a serving certificate for the webhook to use
-apiVersion: cert-manager.io/v1
+apiVersion: cert-manager.io/v1alpha3
 kind: Certificate
 metadata:
   name: acme-he-webhook-webhook-tls
@@ -245,13 +245,13 @@ spec:
     name: acme-he-webhook-ca
   dnsNames:
   - acme-he-webhook
-  - acme-he-webhook.gattytto-code
-  - acme-he-webhook.gattytto-code.svc
+  - acme-he-webhook.cert-manager
+  - acme-he-webhook.cert-manager.svc
 ---
 # Source: acme-he-webhook/templates/pki.yaml
 # Create a selfsigned Issuer, in order to create a root CA certificate for
 # signing webhook serving certificates
-apiVersion: cert-manager.io/v1
+apiVersion: cert-manager.io/v1alpha3
 kind: Issuer
 metadata:
   name: acme-he-webhook-selfsign
@@ -266,7 +266,7 @@ spec:
 ---
 # Source: acme-he-webhook/templates/pki.yaml
 # Create an Issuer that uses the above generated CA certificate to issue certs
-apiVersion: cert-manager.io/v1
+apiVersion: cert-manager.io/v1alpha3
 kind: Issuer
 metadata:
   name: acme-he-webhook-ca
