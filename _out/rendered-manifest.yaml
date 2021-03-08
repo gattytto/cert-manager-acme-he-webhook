@@ -4,6 +4,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: acme-he-webhook
+  namespace: "cert-manager"
   labels:
     app: acme-he-webhook
     chart: acme-he-webhook-0.1.0
@@ -28,6 +29,14 @@ rules:
       - '*'
     verbs:
       - 'create'
+  - apiGroups:
+      - "flowcontrol.apiserver.k8s.io"
+    resources:
+      - 'prioritylevelconfigurations'
+      - 'flowschemas'
+    verbs:
+      - 'list'
+      - 'watch'
 ---
 # Source: acme-he-webhook/templates/rbac.yaml
 # apiserver gets the auth-delegator role to delegate auth decisions to
@@ -49,7 +58,7 @@ subjects:
   - apiGroup: ""
     kind: ServiceAccount
     name: acme-he-webhook
-    namespace: gattytto-code
+    namespace: "cert-manager"
 ---
 # Source: acme-he-webhook/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -69,7 +78,7 @@ subjects:
   - apiGroup: ""
     kind: ServiceAccount
     name: cert-manager
-    namespace: cert-manager
+    namespace: "cert-manager"
 ---
 # Source: acme-he-webhook/templates/rbac.yaml
 # Grant the webhook permission to read the ConfigMap containing the Kubernetes
@@ -93,13 +102,14 @@ subjects:
   - apiGroup: ""
     kind: ServiceAccount
     name: acme-he-webhook
-    namespace: gattytto-code
+    namespace: "cert-manager"
 ---
 # Source: acme-he-webhook/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: acme-he-webhook
+  namespace: "cert-manager"
   labels:
     app: acme-he-webhook
     chart: acme-he-webhook-0.1.0
@@ -120,6 +130,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: "cert-manager"
   name: acme-he-webhook
   labels:
     app: acme-he-webhook
@@ -127,7 +138,7 @@ metadata:
     release: acme-he-webhook
     heritage: Helm
 spec:
-  replicas: 1 
+  replicas: 1
   selector:
     matchLabels:
       app: acme-he-webhook
@@ -192,7 +203,7 @@ spec:
   versionPriority: 15
   service:
     name: acme-he-webhook
-    namespace: gattytto-code
+    namespace: cert-manager
   version: v1alpha1
 ---
 # Source: acme-he-webhook/templates/pki.yaml
@@ -201,7 +212,7 @@ apiVersion: cert-manager.io/v1alpha3
 kind: Certificate
 metadata:
   name: acme-he-webhook-ca
-  namespace: "gattytto-code"
+  namespace: "cert-manager"
   labels:
     app: acme-he-webhook
     chart: acme-he-webhook-0.1.0
@@ -212,7 +223,7 @@ spec:
   duration: 43800h # 5y
   issuerRef:
     name: acme-he-webhook-selfsign
-  commonName: "ca.example-webhook.cert-manager"
+  commonName: "ca.acme-he-webhook.cert-manager"
   isCA: true
 ---
 # Source: acme-he-webhook/templates/pki.yaml
@@ -221,7 +232,7 @@ apiVersion: cert-manager.io/v1alpha3
 kind: Certificate
 metadata:
   name: acme-he-webhook-webhook-tls
-  namespace: "gattytto-code"
+  namespace: "cert-manager"
   labels:
     app: acme-he-webhook
     chart: acme-he-webhook-0.1.0
@@ -244,7 +255,7 @@ apiVersion: cert-manager.io/v1alpha3
 kind: Issuer
 metadata:
   name: acme-he-webhook-selfsign
-  namespace: "gattytto-code"
+  namespace: "cert-manager"
   labels:
     app: acme-he-webhook
     chart: acme-he-webhook-0.1.0
@@ -259,7 +270,7 @@ apiVersion: cert-manager.io/v1alpha3
 kind: Issuer
 metadata:
   name: acme-he-webhook-ca
-  namespace: "gattytto-code"
+  namespace: "cert-manager"
   labels:
     app: acme-he-webhook
     chart: acme-he-webhook-0.1.0

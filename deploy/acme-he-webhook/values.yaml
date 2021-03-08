@@ -7,7 +7,7 @@
 # This group name should be **unique**, hence using your own company's domain
 # here is recommended.
 groupName: dyn.dns.he.net
-
+replicaCount: 1
 certManager:
   namespace: cert-manager
   serviceAccountName: cert-manager
