@@ -92,7 +92,7 @@ type customDNSProviderConfig struct {
 // within a single webhook deployment**.
 // For example, `cloudflare` may be used as the name of a solver.
 func (c *customDNSProviderSolver) Name() string {
-	return "acme-he-solver"
+	return "acme-he-webhook"
 }
 
 func GetHttpClient() *http.Client {
