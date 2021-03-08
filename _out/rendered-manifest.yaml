@@ -196,7 +196,7 @@ metadata:
     release: acme-he-webhook
     heritage: Helm
   annotations:
-    cert-manager.io/inject-ca-from: "acme-he-webhook-webhook-tls"
+    cert-manager.io/inject-ca-from: "cert-manager/acme-he-webhook-webhook-tls"
 spec:
   group: dyn.dns.he.net
   groupPriorityMinimum: 1000
