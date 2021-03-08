@@ -189,7 +189,7 @@ spec:
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
-  name: v1alpha1.dyn.dns.he.net
+  name: v1.dyn.dns.he.net
   labels:
     app: acme-he-webhook
     chart: acme-he-webhook-0.1.0
@@ -204,11 +204,11 @@ spec:
   service:
     name: acme-he-webhook
     namespace: cert-manager
-  version: v1alpha1
+  version: v1
 ---
 # Source: acme-he-webhook/templates/pki.yaml
 # Generate a CA Certificate used to sign certificates for the webhook
-apiVersion: cert-manager.io/v1alpha3
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: acme-he-webhook-ca
@@ -228,7 +228,7 @@ spec:
 ---
 # Source: acme-he-webhook/templates/pki.yaml
 # Finally, generate a serving certificate for the webhook to use
-apiVersion: cert-manager.io/v1alpha3
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: acme-he-webhook-webhook-tls
@@ -251,7 +251,7 @@ spec:
 # Source: acme-he-webhook/templates/pki.yaml
 # Create a selfsigned Issuer, in order to create a root CA certificate for
 # signing webhook serving certificates
-apiVersion: cert-manager.io/v1alpha3
+apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: acme-he-webhook-selfsign
@@ -266,7 +266,7 @@ spec:
 ---
 # Source: acme-he-webhook/templates/pki.yaml
 # Create an Issuer that uses the above generated CA certificate to issue certs
-apiVersion: cert-manager.io/v1alpha3
+apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: acme-he-webhook-ca
