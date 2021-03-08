@@ -43,7 +43,7 @@ func main() {
 	cmd.RunWebhookServer(GroupName,
 		&customDNSProviderSolver{},
 	)
-	fmt.Printf("running for groupname: %v", GroupName)
+	log.Println("running for groupname: %v", GroupName)
 }
 
 // customDNSProviderSolver implements the provider-specific logic needed to
