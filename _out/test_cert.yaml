@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: acme-he-cert-test
+  namespace: cert-manager
+spec:
+  dnsNames:
+  - test.somedomain.com
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  secretName: somedomain-com-tls
