@@ -29,7 +29,7 @@ spec:
           config:
             apiKeySecretRef:
               name: he-apikey-secret
-            email: emanaricua@gmail.com
+            email: mail@mail.com
       selector:
         dnsZones:
         - 'somedomain.com'
