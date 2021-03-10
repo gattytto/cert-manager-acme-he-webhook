@@ -117,7 +117,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	fmt.Printf("Decoded configuration %v", cfg)
 	hostname := strings.TrimSuffix(ch.ResolvedZone, ".")
 	
-	sec,err := c.client.CoreV1().Secrets(ch.ResourceNamespace).Get(context.Background(),secretName,metav1.GetOptions{})
+	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),secretName,metav1.GetOptions{})
 	if err != nil {
 		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
 	}
