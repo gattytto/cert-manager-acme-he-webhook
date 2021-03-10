@@ -43,7 +43,7 @@ func main() {
 	cmd.RunWebhookServer(GroupName,
 		&customDNSProviderSolver{},
 	)
-	log.Println("running for groupname: %v", GroupName)
+	fmt.Printf("running for groupname: %v", GroupName)
 }
 
 // customDNSProviderSolver implements the provider-specific logic needed to
@@ -131,27 +131,27 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	//retry:=false
 	body:=[]byte("")
 	if err != nil {
-		log.Println("Request error...")
-		log.Println("Err:", err.Error())
+		fmt.Printf("Request error...")
+		fmt.Printf("Err:", err.Error())
 	} else {
 		body, _ = ioutil.ReadAll(resp.Body)
 		if resp.StatusCode == http.StatusOK {
 			if string(body) == "good "{
-				log.Println("Update TXT success:", string(body))
+				fmt.Printf("Update TXT success:", string(body))
 				time.Sleep(10)
-				log.Println("wait some seconds...")
+				fmt.Printf("wait some seconds...")
 			}else if string(body) == "interval "{
-				log.Println("Update TXT failed, too fast:", string(body))	
+				fmt.Printf("Update TXT failed, too fast:", string(body))	
 				fail=true
 				time.Sleep(5)
 				//retry=true
 			}else{
-				log.Println("Update TXT failed:", string(body))	
+				fmt.Printf("Update TXT failed:", string(body))	
 				fail=true
 			}
 		} else {
 			fail=true
-			log.Println("Update TXT failed:", string(body))
+			fmt.Printf("Update TXT failed:", string(body))
 		}
 	}
 	if fail { return fmt.Errorf("error: %v", string(body)) }
@@ -187,27 +187,27 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	resp, err := client.Do(req)
 	
 	if err != nil {
-		log.Println("Request error...")
-		log.Println("Err:", err.Error())
+		fmt.Printf("Request error...")
+		fmt.Printf("Err: %v", err.Error())
 	} else {
 		body, _ = ioutil.ReadAll(resp.Body)
 		if resp.StatusCode == http.StatusOK {
 			if string(body) == "good "{
-				log.Println("Update TXT success:", string(body))
+				fmt.Printf("Update TXT success: %v", string(body))
 			}else if string(body) == "interval "{
-				log.Println("Update TXT failed, too fast:", string(body))	
+				fmt.Printf("Update TXT failed, too fast: %v", string(body))	
 				fail=true
 				time.Sleep(5)
 				//retry=true
 			}else if string(body) == "nochange " {
-				log.Println("changed to known value...")
+				fmt.Printf("changed to known value...")
 			}else{
-				log.Println("Update TXT failed:", string(body))	
+				fmt.Printf("Update TXT failed: %v", string(body))	
 				fail=true
 			}
 		} else {
 			fail=true
-			log.Println("Update TXT failed:", string(body))
+			fmt.Printf("Update TXT failed: %v", string(body))
 		}
 		if fail {return fmt.Errorf("error: %v", string(body)) }
 	}
