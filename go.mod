@@ -9,4 +9,5 @@ require (
 	golang.org/x/term v0.0.0-20210220032956-6a3ed077a48d // indirect
 	golang.org/x/text v0.3.5 // indirect
 	k8s.io/apiextensions-apiserver v0.19.0
+	k8s.io/client-go v0.19.0
 )
