@@ -97,3 +97,62 @@ subjects:
     kind: ServiceAccount
     name: {{ include "acme-he-webhook.fullname" . }}
     namespace: {{ .Values.certManager.namespace |quote }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "acme-he-webhook.secretReader" . }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - "secrets"
+  verbs:
+  - "get"
+  - "watch"
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "acme-he-webhook.secretReader" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "acme-he-webhook.secretReader" . }}
+subjects:
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: {{ include "acme-he-webhook.fullname" . }}
+    namespace: {{ .Values.certManager.namespace | quote }}
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "acme-he-webhook.secretReader" . }}
+  namespace: {{ .Values.certManager.namespace | quote }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - "secrets"
+  verbs:
+  - "get"
+  - "watch"
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "acme-he-webhook.secretReader" . }}
+  namespace: {{ .Values.certManager.namespace | quote }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "acme-he-webhook.secretReader" . }}
+subjects:
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: {{ include "acme-he-webhook.fullname" . }}
+    namespace: {{ .Values.certManager.namespace | quote }}

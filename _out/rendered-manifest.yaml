@@ -39,6 +39,20 @@ rules:
       - 'watch'
 ---
 # Source: acme-he-webhook/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: acme-he-webhook:secret-reader
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - "secrets"
+  verbs:
+  - "get"
+  - "watch"
+---
+# Source: acme-he-webhook/templates/rbac.yaml
 # apiserver gets the auth-delegator role to delegate auth decisions to
 # the core apiserver
 apiVersion: rbac.authorization.k8s.io/v1
@@ -81,6 +95,36 @@ subjects:
     namespace: "cert-manager"
 ---
 # Source: acme-he-webhook/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: acme-he-webhook:secret-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: acme-he-webhook:secret-reader
+subjects:
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: acme-he-webhook
+    namespace: "cert-manager"
+---
+# Source: acme-he-webhook/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: acme-he-webhook:secret-reader
+  namespace: "cert-manager"
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - "secrets"
+  verbs:
+  - "get"
+  - "watch"
+---
+# Source: acme-he-webhook/templates/rbac.yaml
 # Grant the webhook permission to read the ConfigMap containing the Kubernetes
 # apiserver's requestheader-ca-certificate.
 # This ConfigMap is automatically created by the Kubernetes apiserver.
@@ -98,6 +142,22 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: extension-apiserver-authentication-reader
+subjects:
+  - apiGroup: ""
+    kind: ServiceAccount
+    name: acme-he-webhook
+    namespace: "cert-manager"
+---
+# Source: acme-he-webhook/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: acme-he-webhook:secret-reader
+  namespace: "cert-manager"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: acme-he-webhook:secret-reader
 subjects:
   - apiGroup: ""
     kind: ServiceAccount

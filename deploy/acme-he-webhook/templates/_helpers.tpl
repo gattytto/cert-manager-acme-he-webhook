@@ -46,3 +46,7 @@ Create chart name and version as used by the chart label.
 {{- define "acme-he-webhook.servingCertificate" -}}
 {{ printf "%s-webhook-tls" (include "acme-he-webhook.fullname" .) }}
 {{- end -}}
+
+{{- define "acme-he-webhook.secretReader" -}}
+{{ printf "%s:secret-reader" (include "acme-he-webhook.fullname" .) }}
+{{- end -}}
