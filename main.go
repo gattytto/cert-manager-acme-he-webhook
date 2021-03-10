@@ -131,26 +131,26 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	body:=[]byte("")
 	if err != nil {
 		fmt.Printf("Request error...")
-		fmt.Printf("Err:", err.Error())
+		fmt.Printf("Err: %v", err.Error())
 	} else {
 		body, _ = ioutil.ReadAll(resp.Body)
 		if resp.StatusCode == http.StatusOK {
 			if string(body) == "good "{
-				fmt.Printf("Update TXT success:", string(body))
+				fmt.Printf("Update TXT success: %v", string(body))
 				time.Sleep(10)
 				fmt.Printf("wait some seconds...")
 			}else if string(body) == "interval "{
-				fmt.Printf("Update TXT failed, too fast:", string(body))	
+				fmt.Printf("Update TXT failed, too fast: %v", string(body))	
 				fail=true
 				time.Sleep(5)
 				//retry=true
 			}else{
-				fmt.Printf("Update TXT failed:", string(body))	
+				fmt.Printf("Update TXT failed: %v", string(body))	
 				fail=true
 			}
 		} else {
 			fail=true
-			fmt.Printf("Update TXT failed:", string(body))
+			fmt.Printf("Update TXT failed: %v", string(body))
 		}
 	}
 	if fail { return fmt.Errorf("error: %v", string(body)) }
