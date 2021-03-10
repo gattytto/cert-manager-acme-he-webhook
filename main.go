@@ -112,15 +112,17 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	if err != nil {
 		return err
 	}
+	fmt.Printf("Decoded configuration %v", cfg)
+
 	namespace:=ch.ResourceNamespace
 	secretName := cfg.APIKeySecretRef.LocalObjectReference.Name
-	fmt.Printf("Decoded configuration %v", cfg)
 	hostname := strings.TrimSuffix(ch.ResolvedZone, ".")
 	
 	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),secretName,metav1.GetOptions{})
 	if err != nil {
 		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
 	}
+
 	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
 	if !ok {
 		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
@@ -138,7 +140,6 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	req, _ := http.NewRequest("POST", HEUrl, strings.NewReader(values.Encode()))
 	resp, err := client.Do(req)
 
-	
 	fail:=false
 	//retry:=false
 	body:=[]byte("")
@@ -183,12 +184,25 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	if err != nil {
 		return err
 	}
-	// TODO: add code that deletes a record from the DNS provider's console
+
+	namespace:=ch.ResourceNamespace
+	secretName := cfg.APIKeySecretRef.LocalObjectReference.Name
+	hostname := strings.TrimSuffix(ch.ResolvedZone, ".")
+	
+	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),secretName,metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
+	}
+	
+	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
+	if !ok {
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+	}
 
 	values := url.Values{}
 	hash := "--"
-	values.Add("hostname", "cert-manager-dns01-tests." + cfg.HostName)
-	values.Add("password", cfg.APIKeySecretRef.Key)
+	values.Add("hostname", "cert-manager-dns01-tests." + hostname)
+	values.Add("password", string(secBytes))
 	values.Add("txt", hash)
 		
 	client := GetHttpClient()
