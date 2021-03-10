@@ -119,7 +119,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	values.Add("hostname", "cert-manager-dns01-tests." + cfg.HostName)
 	values.Add("password", cfg.APIKeySecretRef.Key)
 	values.Add("txt", hash)
-	fmt.Printf("connect to %v with %v to add txt %v", cfg.HostName,cfg.APIKeySecretRef.Key,hash)
+	fmt.Printf("connect to %v with %v to add txt %v", string(cfg.HostName), string(cfg.APIKeySecretRef.Key), string(hash))
 	
 	client := GetHttpClient()
 
