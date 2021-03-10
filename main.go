@@ -16,7 +16,7 @@ import (
 	/*"golang.org/x/tools/go/cfg"
 	 */
 	extapi "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
-
+	
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
@@ -28,6 +28,7 @@ var (
 	// HEUrl the API address for he.net
 	HEUrl = "https://dyn.dns.he.net/nic/update"
 	GroupName = os.Getenv("GROUP_NAME")
+	
 )
 
 func main() {
