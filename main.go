@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -21,6 +22,7 @@ import (
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
 	cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 var (
 	// HEUrl the API address for he.net
@@ -110,15 +112,26 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	if err != nil {
 		return err
 	}
-	
-	// TODO: do something more useful with the decoded configuration
+	namespace:=ch.ResourceNamespace
+	secretName := cfg.APIKeySecretRef.LocalObjectReference.Name
 	fmt.Printf("Decoded configuration %v", cfg)
+	hostname := strings.TrimSuffix(ch.ResolvedZone, ".")
+	
+	sec,err := c.client.CoreV1().Secrets(ch.ResourceNamespace).Get(context.Background(),secretName,metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
+	}
+	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
+	if !ok {
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+	}
+
 	values := url.Values{}
 	hash := ch.Key
-	values.Add("hostname", "cert-manager-dns01-tests." + cfg.HostName)
-	values.Add("password", cfg.APIKeySecretRef.Key)
+	values.Add("hostname", "cert-manager-dns01-tests." + hostname)
+	values.Add("password", string(secBytes))
 	values.Add("txt", hash)
-	fmt.Printf("connect to %v with %v to add txt %v", string(cfg.HostName), string(cfg.APIKeySecretRef.Key), string(hash))
+	fmt.Printf("connect to %v with %v to add txt %v", hostname, string(cfg.APIKeySecretRef.Key), string(hash))
 	
 	client := GetHttpClient()
 
