@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 	"strings"
+	
 
 	"net/url"
 	"os"
@@ -83,7 +84,7 @@ type customDNSProviderConfig struct {
 
 	Email           string `json:"email"`
 	APIKeySecretRef cmmeta.SecretKeySelector `json:"apiKeySecretRef"`
-	HostName		string `json: "hostname"`
+	HostName		string `json:"hostname"`
 }
 
 // Name is used as the name for this DNS solver when referencing it on the ACME
@@ -155,12 +156,12 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 		if resp.StatusCode == http.StatusOK {
 			if string(body) == "good "{
 				fmt.Printf("Update TXT success: %v", string(body))
-				time.Sleep(10)
+				time.Sleep(10 * time.Second)
 				fmt.Printf("wait some seconds...")
 			}else if string(body) == "interval "{
 				fmt.Printf("Update TXT failed, too fast: %v", string(body))	
 				fail=true
-				time.Sleep(5)
+				time.Sleep(5 * time.Second)
 				//retry=true
 			}else{
 				fmt.Printf("Update TXT failed: %v", string(body))	
@@ -232,7 +233,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 			}else if string(body) == "interval "{
 				fmt.Printf("Update TXT failed, too fast: %v", string(body))	
 				fail=true
-				time.Sleep(5)
+				time.Sleep(5 * time.Second)
 				//retry=true
 			}else if string(body) == "nochange " {
 				fmt.Printf("changed to known value...")
