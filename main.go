@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	 b64 "encoding/base64"
+	 _ "encoding/base64"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -29,7 +29,6 @@ var (
 	// HEUrl the API address for he.net
 	HEUrl = "https://dyn.dns.he.net/nic/update"
 	GroupName = os.Getenv("GROUP_NAME")
-	
 )
 
 func main() {
@@ -124,15 +123,15 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
 	}
 
-	secBytes, err := sec.Data["key"]
-	if err != nil {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", secBytes, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+	secBytes, ok := sec.Data["key"]
+	if !ok {
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", string(secBytes), cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
 
 	values := url.Values{}
 	hash := ch.Key
 	values.Add("hostname", "cert-manager-dns01-tests." + hostname)
-	values.Add("password", secBytes)
+	values.Add("password", string(secBytes))
 	values.Add("txt", hash)
 	fmt.Printf("connect to %v with %v to add txt %v", hostname, secBytes, string(hash))
 	
@@ -195,9 +194,9 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
 	}
 	
-	secBytes, err := sec.Data["key"]
-	if err != nil {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", secBytes, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+	secBytes, ok := sec.Data["key"]
+	if !ok {
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", string(secBytes), cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
 
 	values := url.Values{}
