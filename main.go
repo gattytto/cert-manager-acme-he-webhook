@@ -129,7 +129,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	}
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
 	if err != nil {
-		return fmt.Errorf("no decode")
+		return fmt.Errorf("no decode %v", err)
 	}
 	fmt.Printf("decoded is: %v", decoded)
 	values := url.Values{}
@@ -204,7 +204,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	}
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
 	if err != nil {
-		return fmt.Errorf("no decode")
+		return fmt.Errorf("no decode %v", err)
 	}
 	fmt.Printf("decoded is: %v", decoded)
 	
