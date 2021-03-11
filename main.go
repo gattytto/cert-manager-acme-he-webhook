@@ -115,7 +115,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	fmt.Printf("Decoded configuration %v", cfg)
 
 	namespace:=ch.ResourceNamespace
-	hostname := strings.TrimSuffix(ch.ResolvedZone, ".")
+	hostname := strings.TrimSuffix(ch.DNSName, ".")
 	
 	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),cfg.APIKeySecretRef.Name,metav1.GetOptions{})
 	if err != nil {
@@ -188,7 +188,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	}
 
 	namespace:=ch.ResourceNamespace
-	hostname := strings.TrimSuffix(ch.ResolvedZone, ".")
+	hostname := strings.TrimSuffix(ch.DNSName, ".")
 	
 	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),cfg.APIKeySecretRef.Name,metav1.GetOptions{})
 	if err != nil {
