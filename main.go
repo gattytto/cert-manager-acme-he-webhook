@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	 b64 "encoding/base64"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -123,8 +124,8 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
 	}
 
-	secBytes, ok := sec.Data["key"]
-	if !ok {
+	secBytes, err := b64.StdEncoding.DecodeString(string(sec.Data["key"]))
+	if err != nil {
 		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
 
@@ -133,7 +134,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	values.Add("hostname", "cert-manager-dns01-tests." + hostname)
 	values.Add("password", string(secBytes))
 	values.Add("txt", hash)
-	fmt.Printf("connect to %v with %v to add txt %v", hostname, string(secBytes), string(hash))
+	fmt.Printf("connect to %v with %v to add txt %v", hostname, secBytes, string(hash))
 	
 	client := GetHttpClient()
 
@@ -194,8 +195,8 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
 	}
 	
-	secBytes, ok := sec.Data["key"]
-	if !ok {
+	secBytes, err := b64.StdEncoding.DecodeString(string(sec.Data["key"]))
+	if err != nil {
 		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
 
