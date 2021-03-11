@@ -129,9 +129,9 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	}
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
 	if err != nil {
-		fmt.Errorf("no decode")
+		return fmt.Errorf("no decode")
 	}
-	fmt.Errorf("decoded is: %v", decoded)
+	fmt.Printf("decoded is: %v", decoded)
 	values := url.Values{}
 	hash := ch.Key
 	values.Add("hostname", "cert-manager-dns01-tests." + hostname)
@@ -204,9 +204,9 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	}
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
 	if err != nil {
-		fmt.Errorf("no decode")
+		return fmt.Errorf("no decode")
 	}
-	fmt.Errorf("decoded is: %v", decoded)
+	fmt.Printf("decoded is: %v", decoded)
 	
 	values := url.Values{}
 	hash := "--"
