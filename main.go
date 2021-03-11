@@ -130,7 +130,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	
 	values := url.Values{}
 	hash := ch.Key
-	values.Add("hostname", hostname)
+	values.Add("hostname", "_acme-challenge." + hostname)
 	values.Add("password", string(secBytes))
 	values.Add("txt", hash)
 	fmt.Printf("connect to %s with %s to add txt %v", hostname, string(secBytes), string(hash))
@@ -203,7 +203,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	
 	values := url.Values{}
 	hash := "--"
-	values.Add("hostname", hostname)
+	values.Add("hostname", "_acme-challenge." + hostname)
 	values.Add("password", string(secBytes))
 	values.Add("txt", hash)
 		
