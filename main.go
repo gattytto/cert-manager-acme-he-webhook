@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 	"strings"
-	
+	corev1 "k8s.io/api/core/v1"
 
 	"net/url"
 	"os"
@@ -23,7 +23,7 @@ import (
 
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
-	cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
+	//cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 var (
@@ -83,7 +83,7 @@ type customDNSProviderConfig struct {
 	// `issuer.spec.acme.dns01.providers.webhook.config` field.
 
 	Email           string `json:"email"`
-	APIKeySecretRef cmmeta.SecretKeySelector `json:"apiKeySecretRef"`
+	APIKeySecretRef corev1.SecretKeySelector `json:"apiKeySecretRef"`
 	HostName		string `json:"hostname"`
 }
 
