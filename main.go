@@ -116,17 +116,16 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	fmt.Printf("Decoded configuration %v", cfg)
 
 	namespace:=ch.ResourceNamespace
-	secretName := cfg.APIKeySecretRef.LocalObjectReference.Name
 	hostname := strings.TrimSuffix(ch.ResolvedZone, ".")
 	
-	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),secretName,metav1.GetOptions{})
+	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),cfg.APIKeySecretRef.Name,metav1.GetOptions{})
 	if err != nil {
-		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
+		return fmt.Errorf("unable to get secret `%s`; %v", cfg.APIKeySecretRef.Name, err)
 	}
 
 	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
 	if !ok {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.Name, namespace)
 	}
 	fmt.Printf("bytes in string is: %v", string(secBytes))
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
@@ -192,17 +191,16 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	}
 
 	namespace:=ch.ResourceNamespace
-	secretName := cfg.APIKeySecretRef.LocalObjectReference.Name
 	hostname := strings.TrimSuffix(ch.ResolvedZone, ".")
 	
-	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),secretName,metav1.GetOptions{})
+	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),cfg.APIKeySecretRef.Name,metav1.GetOptions{})
 	if err != nil {
-		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
+		return fmt.Errorf("unable to get secret `%s`; %v", cfg.APIKeySecretRef.Name, err)
 	}
 	
 	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
 	if !ok {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.Name, namespace)
 	}
 	fmt.Printf("bytes in string is: %v", string(secBytes))
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
