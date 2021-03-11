@@ -4,7 +4,7 @@ metadata:
   name: he-apikey-secret
   namespace: cert-manager
 data:
-  key: "he-ddns-key"
+  heDdnsKey: 'ddnskey'
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -16,7 +16,7 @@ spec:
     # You must replace this email address with your own.
     # Let's Encrypt will use this to contact you about expiring
     # certificates, and issues related to your account.
-    email: email@mail.com
+    email: mail@mail.com
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       # Secret resource that will be used to store the account's private key.
@@ -29,6 +29,7 @@ spec:
           config:
             apiKeySecretRef:
               name: he-apikey-secret
+              key: heDdnsKey
             email: mail@mail.com
       selector:
         dnsZones:
