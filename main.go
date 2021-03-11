@@ -124,15 +124,15 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
 	}
 
-	secBytes, err := b64.StdEncoding.DecodeString(string(sec.Data["key"]))
-	if err != nil {
+	secBytes, err := sec.Data["key"]
+	if err != {
 		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
 
 	values := url.Values{}
 	hash := ch.Key
 	values.Add("hostname", "cert-manager-dns01-tests." + hostname)
-	values.Add("password", string(secBytes))
+	values.Add("password", secBytes)
 	values.Add("txt", hash)
 	fmt.Printf("connect to %v with %v to add txt %v", hostname, secBytes, string(hash))
 	
@@ -195,7 +195,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
 	}
 	
-	secBytes, err := b64.StdEncoding.DecodeString(string(sec.Data["key"]))
+	secBytes, err := sec.Data["key"])
 	if err != nil {
 		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
