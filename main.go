@@ -126,7 +126,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 
 	secBytes, err := sec.Data["key"]
 	if err != {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", secBytes, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
 
 	values := url.Values{}
@@ -197,7 +197,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	
 	secBytes, err := sec.Data["key"])
 	if err != nil {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", secBytes, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
 
 	values := url.Values{}
