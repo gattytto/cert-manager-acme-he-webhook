@@ -119,7 +119,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	
 	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),cfg.APIKeySecretRef.Name,metav1.GetOptions{})
 	if err != nil {
-		return fmt.Errorf("unable to get secret `%s`; %v", cfg.APIKeySecretRef.Name, err)
+		return fmt.Errorf("unable to get secret %s/`%s`; %v", namespace,cfg.APIKeySecretRef.Name, err)
 	}
 
 	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
@@ -192,7 +192,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	
 	sec,err := c.client.CoreV1().Secrets(namespace).Get(context.Background(),cfg.APIKeySecretRef.Name,metav1.GetOptions{})
 	if err != nil {
-		return fmt.Errorf("unable to get secret `%s`; %v", cfg.APIKeySecretRef.Name, err)
+		return fmt.Errorf("unable to get secret %s/ `%s`; %v", namespace, cfg.APIKeySecretRef.Name, err)
 	}
 	
 	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
