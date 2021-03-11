@@ -127,12 +127,12 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 	if !ok {
 		return fmt.Errorf("Key %v not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.Name, namespace)
 	}
-	fmt.Printf("bytes in string is: %v", string(secBytes))
+	fmt.Printf("bytes in string is: %s", string(secBytes))
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
 	if err != nil {
-		return fmt.Errorf("no decode %v", err)
+		return fmt.Errorf("no decode %s", err)
 	}
-	fmt.Printf("decoded is: %v", decoded)
+	fmt.Printf("decoded is: %s", decoded)
 	values := url.Values{}
 	hash := ch.Key
 	values.Add("hostname", "cert-manager-dns01-tests." + hostname)
@@ -202,12 +202,12 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	if !ok {
 		return fmt.Errorf("Key %v not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.Name, namespace)
 	}
-	fmt.Printf("bytes in string is: %v", string(secBytes))
+	fmt.Printf("bytes in string is: %s", string(secBytes))
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
 	if err != nil {
-		return fmt.Errorf("no decode %v", err)
+		return fmt.Errorf("no decode %s", err)
 	}
-	fmt.Printf("decoded is: %v", decoded)
+	fmt.Printf("decoded is: %s", decoded)
 	
 	values := url.Values{}
 	hash := "--"
