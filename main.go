@@ -126,8 +126,9 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 
 	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
 	if !ok {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", string(secBytes), cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
+	fmt.Printf("bytes in string is: %v", string(secBytes))
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
 	if err != nil {
 		return fmt.Errorf("no decode %v", err)
@@ -201,8 +202,9 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	
 	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
 	if !ok {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", string(secBytes), cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
+		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
+	fmt.Printf("bytes in string is: %v", string(secBytes))
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
 	if err != nil {
 		return fmt.Errorf("no decode %v", err)
@@ -218,7 +220,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	client := GetHttpClient()
 	fail:=false
 	//retry:=false
-	body:=[]byte("")
+	body:=[]byte("-")
 	req, _ := http.NewRequest("POST", HEUrl, strings.NewReader(values.Encode()))
 	resp, err := client.Do(req)
 	
