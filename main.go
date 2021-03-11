@@ -158,6 +158,8 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 				fail=true
 				time.Sleep(5 * time.Second)
 				//retry=true
+			}else if string(body) == "nochg " {
+				fmt.Printf("changed to known value...")
 			}else{
 				fmt.Printf("Update TXT failed: %v", string(body))	
 				fail=true
@@ -225,7 +227,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 				fail=true
 				time.Sleep(5 * time.Second)
 				//retry=true
-			}else if string(body) == "nochange " {
+			}else if string(body) == "nochg " {
 				fmt.Printf("changed to known value...")
 			}else{
 				fmt.Printf("Update TXT failed: %v", string(body))	
