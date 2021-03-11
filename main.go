@@ -125,7 +125,7 @@ func (c *customDNSProviderSolver) Present(ch *v1alpha1.ChallengeRequest) error {
 
 	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
 	if !ok {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.Name, namespace)
+		return fmt.Errorf("Key %v not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.Name, namespace)
 	}
 	fmt.Printf("bytes in string is: %v", string(secBytes))
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
@@ -200,7 +200,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 	
 	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
 	if !ok {
-		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.Name, namespace)
+		return fmt.Errorf("Key %v not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.Name, namespace)
 	}
 	fmt.Printf("bytes in string is: %v", string(secBytes))
 	decoded,err := base64.StdEncoding.DecodeString(string(secBytes))
