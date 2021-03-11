@@ -30,7 +30,7 @@ spec:
             - --tls-private-key-file=/tls/tls.key
           env:
             - name: GROUP_NAME
-              value: {{ .Values.groupName }}/v1alpha1
+              value: {{ .Values.groupName |quote }}
           ports:
             - name: https
               containerPort: 443
