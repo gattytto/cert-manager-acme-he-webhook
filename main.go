@@ -194,7 +194,7 @@ func (c *customDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error {
 		return fmt.Errorf("unable to get secret `%s`; %v", secretName, err)
 	}
 	
-	secBytes, ok := sec.Data[cfg.APIKeySecretRef.Key]
+	secBytes, ok := sec.Data["key"]
 	if !ok {
 		return fmt.Errorf("Key %q not found in secret \"%s/%s\"", cfg.APIKeySecretRef.Key, cfg.APIKeySecretRef.LocalObjectReference.Name, namespace)
 	}
