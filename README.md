@@ -1,4 +1,4 @@
-# ACME webhook example
+# Cert-Manager Let's Encrypt DNS-01 challenge for Hurrican Electric's free dynamic dns
 
 The ACME issuer type supports an optional 'webhook' solver, which can be used
 to implement custom DNS01 challenge solving logic.
