@@ -15,6 +15,7 @@ same goes for letsencrypt fields like mail and server (for testing with staging 
 I have added a wait statement in the code because he.net ratelimits requests. 
 
 TODO: add code to delete the challenge dns TXT records from the domain (they are just blanked now)
+
 TODO2: create an operator to automate the ddnskey generation for domains, no api for this available.
 
 
