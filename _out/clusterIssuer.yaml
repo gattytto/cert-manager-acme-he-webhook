@@ -5,6 +5,7 @@ metadata:
   namespace: cert-manager
 data:
   heDdnsKey: 'ddnskey'
+  #           HAS to be base64 encoded
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
